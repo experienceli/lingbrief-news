@@ -1,0 +1,65 @@
+{
+  "$说明": "语言学资讯聚合站 信源配置。type: rss(标准RSS/Atom) | linklist(网页链接列表页, 自动进详情页取摘要)。category: conference/lecture/policy/journal/news/job/book/international",
+  "llm": {
+    "provider": "deepseek",
+    "model": "deepseek-chat",
+    "api_base": "https://api.deepseek.com/chat/completions",
+    "env_key": "DEEPSEEK_API_KEY",
+    "max_new_items_per_run": 40,
+    "batch_size": 10
+  },
+  "fetch": {
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+    "timeout": 25,
+    "max_items_per_source": 15,
+    "max_details_per_source": 12,
+    "delay_seconds": 1.0
+  },
+  "sources": [
+    {
+      "id": "cass-xshd",
+      "name": "中国社科院语言研究所·学术活动",
+      "type": "linklist",
+      "url": "http://ling.cass.cn/xshd/",
+      "path_hint": ["/huiyi/", "/jiaoliu/", "/xuejie/"],
+      "category_hint": {"conference": ["/huiyi/"], "lecture": ["/jiaoliu/"], "news": ["/xuejie/"]},
+      "default_category": "news",
+      "weight": 9,
+      "enabled": true
+    },
+    {
+      "id": "cass-gnhy",
+      "name": "中国社科院语言研究所·国内会议",
+      "type": "linklist",
+      "url": "http://ling.cass.cn/yys75zn/gnhy/index.html",
+      "path_hint": ["/huiyi/"],
+      "category_hint": {"conference": ["/huiyi/"]},
+      "default_category": "conference",
+      "weight": 8,
+      "enabled": true
+    },
+    {
+      "id": "cass-news",
+      "name": "中国社科院语言研究所·要闻",
+      "type": "linklist",
+      "url": "http://ling.cass.cn/news/index.html",
+      "path_hint": ["/bensuo/", "/xuejie/"],
+      "category_hint": {"news": ["/bensuo/"], "news": ["/xuejie/"]},
+      "default_category": "news",
+      "weight": 8,
+      "enabled": true
+    },
+    {
+      "id": "moe-yuyongsi",
+      "name": "教育部语言文字信息管理司·通知公告",
+      "type": "linklist",
+      "url": "http://www.moe.gov.cn/s78/A19/tongzhi/",
+      "path_hint": [".html"],
+      "category_hint": {"policy": []},
+      "default_category": "policy",
+      "weight": 9,
+      "enabled": true
+    }
+  ],
+  "sample_items": []
+}
