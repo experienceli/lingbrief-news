@@ -104,7 +104,7 @@ def parse_rss(xml_text, source):
             continue
     return items
 
-def parse_link_list(html_text, base_url, path_hints, source):
+def parse_link_list(html_text, base_url, path_hints, source, link_pattern=None):
     """通用中文机构站列表页解析：提取详情页链接（多为 tYYYYMMDD_xxx.html 形式或通配）。返回按页序的 [{url,title,brief}]"""
     found = []
     pattern = re.compile(r'<a[^>]+href="([^"]+.(?:html|htm|shtml))"[^>]*>\s*<[^>]+>\s*([^<]{6,})', re.I)
@@ -114,6 +114,8 @@ def parse_link_list(html_text, base_url, path_hints, source):
     for m in anchors:
         href = m.group(1)
         if not re.search(r"\.(?:html|htm|shtml)", href, re.I):
+            continue
+        if link_pattern and not re.search(link_pattern, href):
             continue
         if not any(h in href for h in (path_hints or [".html"])):
             continue
@@ -174,13 +176,22 @@ class Fetcher:
                                 "weight": s.get("weight", 5), "category": cat})
             except Exception as e:
                 print("  [warn] rss fail %s: %s" % (url, e))
+        elif s["type"] == "linglist":
+            try:
+                got = fetch_linglist(url, s, self.delay, self.timeout,
+                                     self.cfg.get("max_details_per_source", 12))
+                out.extend(got)
+            except Exception as e:
+                print("  [warn] linglist fail %s: %s" % (url, e))
         elif s["type"] == "linklist":
             try:
                 time.sleep(self.delay)
                 text, _ = http_get(url, self.timeout)
-                links = parse_link_list(text, url, s.get("path_hint") or [".html"], s)
+                links = parse_link_list(text, url, s.get("path_hint") or [".html"], s, s.get("link_pattern"))
                 maxdet = self.cfg.get("max_details_per_source", 12)
                 for l in links[:maxdet]:
+                    if not match_include(l["title"], s):
+                        continue
                     cat = infer_category(l["url"], s)
                     try:
                         time.sleep(self.delay)
@@ -210,6 +221,86 @@ def extract_date_from_url(url):
         d = m.group(1)
         return "%s-%s-%s" % (d[:4], d[4:6], d[6:8])
     return ""
+
+LINGLIST_PREFIX_CAT = {
+    "Jobs": "job", "Confs": "conference", "Calls": "conference",
+    "Books": "book", "TOC": "journal", "Journals": "journal",
+    "Announcements": "news", "Support": "news", "Discussion": "news",
+}
+
+def match_include(title, src):
+    """可选的关键词过滤：配置 include_keywords 时，标题须命中其一才保留"""
+    kws = src.get("include_keywords") or []
+    if not kws:
+        return True
+    return any(k in title for k in kws)
+
+def fetch_linglist(list_url, source, delay, timeout, max_details):
+    """LINGUIST List 列表页 /issues/ → 每期详情页。标题前缀 Jobs/Confs/Calls
+    决定分类；详情页抓正文与英文日期。"""
+    out = []
+    text, _ = http_get(list_url, timeout)
+    seen = set()
+    for m in re.finditer(r'<a[^>]+href="(/issues/\d+/\d+/)"[^>]*>(.*?)</a>', text, flags=re.S | re.I):
+        href = m.group(1)
+        if href in seen:
+            continue
+        raw_title = strip_tags(m.group(2)).strip()
+        if len(raw_title) < 10 or not raw_title.startswith(("Jobs", "Confs", "Calls", "Books", "TOC", "Announcements", "Support", "Discussion")):
+            continue
+        seen.add(href)
+        prefix = raw_title.split(":")[0].strip()
+        title = re.sub(r"^(?:Confs|Jobs|Calls|Books|TOC|Announcements|Support|Discussion):\s*", "", raw_title)
+        title = re.sub(r"^(Confs|Jobs|Calls|Books|TOC|Announcements|Support|Discussion):\s*\1:\s*", "", title)
+        if not title or len(title) < 8:
+            continue
+        if len(out) >= max_details:
+            break
+        try:
+            time.sleep(delay)
+            dtext, _ = http_get(urllib.parse.urljoin(list_url, href), timeout)
+            title2, body_text = extract_linglist_detail(dtext)
+            cat = LINGLIST_PREFIX_CAT.get(prefix, source.get("default_category", "international"))
+            out.append({
+                "title": (title2 or title)[:140], "url": urllib.parse.urljoin(list_url, href),
+                "raw_text": body_text[:900],
+                "published_raw": parse_ll_date(body_text),
+                "source": source["name"], "source_id": source["id"],
+                "weight": source.get("weight", 6), "category": cat,
+            })
+        except Exception as e:
+            print("  [warn] linglist detail fail %s: %s" % (href, e))
+    return out
+
+def extract_linglist_detail(html_text):
+    """LINGUIST List 详情页：标题（og:title/页内标题）+ 正文前两段"""
+    title = ""
+    m = re.search(r'property="og:title" content="([^"]+)"', html_text)
+    if m:
+        title = m.group(1).strip()
+    if not title:
+        m = re.search(r"<title>(.*?)</title>", html_text, flags=re.S | re.I)
+        if m:
+            title = strip_tags(m.group(1)).strip()
+    title = re.sub(r"^LINGUIST List \d+\.\d+\s*", "", title)
+    title = re.sub(r"^(Confs|Jobs|Calls|Books|TOC|Announcements|Support|Discussion):\s*\1:\s*", "", title)
+    body = re.sub(r"<script.*?</script>", " ", html_text, flags=re.S | re.I)
+    body = re.sub(r"<style.*?</style>", " ", body, flags=re.S | re.I)
+    paras = [strip_tags(p) for p in re.findall(r"<p[^>]*>(.*?)</p>", body, flags=re.S | re.I)]
+    paras = [p for p in paras if len(p) >= 80]
+    summary = " ".join(paras[:2])[:900]
+    return title, summary
+
+MONTHS_EN = {"Jan":"01","Feb":"02","Mar":"03","Apr":"04","May":"05","Jun":"06",
+             "Jul":"07","Aug":"08","Sep":"09","Oct":"10","Nov":"11","Dec":"12"}
+
+def parse_ll_date(text):
+    """从 'Fri Aug 28 2026' 形式解析发布日期"""
+    m = re.search(r"([A-Z][a-z]{2})\s+([A-Z][a-z]{2})\s+(\d{1,2})\s+(\d{4})", text)
+    if m and m.group(2) in MONTHS_EN:
+        return "%s-%s-%s" % (m.group(4), MONTHS_EN[m.group(2)], m.group(3).zfill(2))
+    return ""
+
 
 def item_id(url):
     return hashlib.sha1(url.encode("utf-8")).hexdigest()[:16]

@@ -1,11 +1,11 @@
 {
-  "$说明": "语言学资讯聚合站 信源配置。type: rss(标准RSS/Atom) | linklist(网页链接列表页, 自动进详情页取摘要)。category: conference/lecture/policy/journal/news/job/book/international",
+  "$说明": "语言学资讯聚合站 信源配置。type: rss | linklist(网页列表,自动进详情页) | linglist(LINGUIST List专用)。category: conference/lecture/policy/journal/news/job/book/international。include_keywords: 标题须命中任一关键词才收录(可选)。topics: 主题词表,用于热点榜。",
   "llm": {
     "provider": "deepseek",
     "model": "deepseek-chat",
     "api_base": "https://api.deepseek.com/chat/completions",
     "env_key": "DEEPSEEK_API_KEY",
-    "max_new_items_per_run": 40,
+    "max_new_items_per_run": 60,
     "batch_size": 10
   },
   "fetch": {
@@ -14,6 +14,19 @@
     "max_items_per_source": 15,
     "max_details_per_source": 12,
     "delay_seconds": 1.0
+  },
+  "topics": {
+    "计算语言学": ["计算语言学", "自然语言处理", "NLP", "大模型", "人工智能", "语言模型", "智能体", "机器翻译"],
+    "语音学": ["语音学", "语音合成", "声学", "音系", "声调", "发音", "语音识别", "言语"],
+    "方言学": ["方言", "田野调查", "语言资源", "少数民族语言"],
+    "辞书学": ["辞书", "词典", "字典", "古籍", "辞源", "新华字典", "现代汉语词典"],
+    "语法学": ["语法", "句法", "词类", "构式", "形态学", "词法"],
+    "语义学": ["语义", "意义", "隐喻", "指称", "语用"],
+    "国际中文教育": ["国际中文教育", "对外汉语", "汉语教学", "二语", "习得", "HSK", "中文教育"],
+    "语言政策": ["语言政策", "语言规划", "语言文字工作", "国家语委", "语言战略", "语言生活"],
+    "汉语史": ["汉语史", "古汉语", "训诂", "上古汉语", "音韵", "文字学", "词源"],
+    "语言与AI": ["AI", "人工智能", "大语言模型", "Agent", "提示词"], 
+    "期刊动态": ["期刊", "刊讯", "目录", "影响因子", "学报", "CSSCI", "SSCI"]
   },
   "sources": [
     {
@@ -58,6 +71,38 @@
       "category_hint": {"policy": []},
       "default_category": "policy",
       "weight": 9,
+      "enabled": true
+    },
+    {
+      "id": "linglist",
+      "name": "LINGUIST List（国际）",
+      "type": "linglist",
+      "url": "https://linguistlist.org/issues/",
+      "default_category": "international",
+      "weight": 6,
+      "enabled": true
+    },
+    {
+      "id": "cp-book",
+      "name": "商务印书馆·新书",
+      "type": "linklist",
+      "url": "http://www.cp.com.cn/book/new.dhtml",
+      "path_hint": ["/book/"],
+      "include_keywords": ["汉语", "语言", "词典", "字典", "汉字", "语法", "语料", "修辞", "翻译", "外语", "英语", "国语", "方言", "音韵", "文字", "词汇"],
+      "default_category": "book",
+      "weight": 7,
+      "enabled": true
+    },
+    {
+      "id": "pku-bxgg",
+      "name": "北京大学中国语言文学系·公告",
+      "type": "linklist",
+      "url": "https://chinese.pku.edu.cn/xwgg/bxgg/index.htm",
+      "path_hint": [".htm"],
+      "link_pattern": "[0-9a-f]{32}\\.htm",
+      "include_keywords": ["征稿", "征文", "启事", "答辩", "招聘", "论坛", "讲座", "会议", "公告", "通知", "选拔", "评审"],
+      "default_category": "news",
+      "weight": 8,
       "enabled": true
     }
   ],
