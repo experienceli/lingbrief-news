@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="语言学资讯每日精选：期刊、会议、讲座、政策、招聘、新书一站式聚合"><title>关于 · 语闻 LingBrief</title><style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14181f;--sub:#616a75;--line:#e6e9ee;--accent:#e05d3f;--accent-soft:#fdf1ec}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px}
+header.site{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:17px;letter-spacing:.5px}
+.logo em{font-style:normal;color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+nav a{padding:5px 11px;border-radius:8px;font-size:13.5px;color:var(--sub)}
+nav a.active,nav a:hover{background:#f1f3f6;color:var(--ink);font-weight:600}
+.today{font-size:12.5px;color:var(--sub)}
+main{padding:26px 0 60px}
+h1.page{font-size:21px;font-weight:800}
+.subtitle{color:var(--sub);font-size:13px;margin:4px 0 18px}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;color:#fff;vertical-align:middle}
+.src-pill{display:inline-block;font-size:11.5px;background:#f1f3f5;color:#5a6472;padding:2px 8px;border-radius:6px}
+.day-head{display:flex;align-items:center;gap:10px;margin:26px 0 12px;color:var(--sub);font-size:13.5px;font-weight:600}
+.day-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.day-head .n{font-weight:400}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;transition:box-shadow .15s}
+.card:hover{box-shadow:0 4px 14px rgba(20,24,31,.07)}
+.card .meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sub);margin-bottom:6px;flex-wrap:wrap}
+.card h3{font-size:15.5px;font-weight:700;margin-bottom:7px}
+.card h3 a:hover{color:var(--accent)}
+.card .summary{font-size:13.8px;color:#3c4552}
+.card .reason{margin-top:9px;font-size:12.8px;background:var(--accent-soft);border-left:3px solid var(--accent);padding:7px 10px;border-radius:0 8px 8px 0;color:#8a4a35}
+.card .reason b{color:var(--accent);margin-right:4px}
+.card .foot{margin-top:9px;display:flex;gap:12px;font-size:12px;color:var(--sub);align-items:center;flex-wrap:wrap}
+.foot a.link{color:#2f6fd0}
+.score{font-weight:800;color:var(--accent)}
+.score.hi{color:#d43c1e}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font-size:13px;cursor:pointer;color:var(--sub)}
+.filters button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search{width:100%;padding:9px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;margin-bottom:14px}
+input.search:focus{outline:2px solid #d4dbe4}
+.rank{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.rank .num{font-size:22px;font-weight:800;min-width:34px;color:var(--accent)}
+.rank .num.t2{color:#8a5a2c}
+.rank .num.t3{color:#5a6472}
+.rank h3{font-size:15.5px;font-weight:700}
+.rank .sub{font-size:12px;color:var(--sub);margin:3px 0 8px}
+.heatbar{height:5px;background:#eef1f4;border-radius:3px;margin-bottom:10px;overflow:hidden}
+.heatbar i{display:block;height:100%;background:linear-gradient(90deg,#f0a58e,var(--accent));border-radius:3px}
+.rank ul{list-style:none}
+.rank li{font-size:13px;padding:3px 0;color:#3c4552}
+.rank li a:hover{color:var(--accent)}
+.rank li .rs{color:var(--sub);font-size:12px;margin-left:6px}
+.cal-month{font-weight:800;margin:22px 0 10px}
+.dcount{font-size:12px;color:var(--accent);font-weight:600}
+.tag{display:inline-block;font-size:10.5px;background:#eef1f5;color:#5a6472;border-radius:4px;padding:1px 6px;margin:0 2px 2px 0}
+.empty{padding:40px;text-align:center;color:var(--sub)}
+.daily-head{display:flex;gap:14px;align-items:baseline;margin-bottom:16px;flex-wrap:wrap}
+.archives{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:20px}
+.archives a{display:inline-block;margin:2px 8px 2px 0;font-size:13px;color:var(--sub)}
+.archives a:hover{color:var(--accent)}
+.about h2{font-size:16px;font-weight:700;margin:20px 0 8px}
+.about p,.about li{font-size:14px;color:#3c4552;margin-bottom:6px}
+footer.site{border-top:1px solid var(--line);padding:20px 0;color:var(--sub);font-size:12px;text-align:center}
+@media(max-width:600px){.card{padding:13px;border-radius:10px}.rank{padding:13px}.today{display:none}}
+</style></head><body><header class="site"><div class="wrap"><div class="logo">语闻<em> LingBrief</em></div><a href="index.html">首页·精选</a><a href="all.html">全部动态</a><a href="hot.html">热点榜</a><a href="daily.html">每日日报</a><a href="calendar.html">会议日历</a><a href="journal.html">期刊速递</a><a href="about.html" class="active">关于</a><div class="today">2026年08月28日</div></div></header><main><div class="wrap"><h1 class="page">关于本站</h1><div class="subtitle">语闻 LingBrief — 语言学资讯聚合（原型）</div><div class="about"><h2>这是什么</h2><p>每天自动抓取语言学相关机构、期刊、国际学术平台的信息，生成中文摘要、打分与"推荐理由"，每天 08:00 发布今日日报。信源抓取→去重→摘要→发布 全程自动，零人工运营。</p><h2>当前信源（7 个）</h2><ul><li>中国社科院语言研究所·学术活动<span class='tag'>linklist</span><span class='tag'>news</span></li><li>中国社科院语言研究所·国内会议<span class='tag'>linklist</span><span class='tag'>conference</span></li><li>中国社科院语言研究所·要闻<span class='tag'>linklist</span><span class='tag'>news</span></li><li>教育部语言文字信息管理司·通知公告<span class='tag'>linklist</span><span class='tag'>policy</span></li><li>LINGUIST List（国际）<span class='tag'>linglist</span><span class='tag'>international</span></li><li>商务印书馆·新书<span class='tag'>linklist</span><span class='tag'>book</span></li><li>北京大学中国语言文学系·公告<span class='tag'>linklist</span><span class='tag'>news</span></li></ul><p style="color:#616a75">在 config.json 中可随时增删信源：RSS 直接填 feed 地址；中文机构站填列表页 URL + path_hint；LINGUIST List 用专用类型。</p><h2>栏目说明</h2><p>今日精选：按日期分组的高分条目；全部动态：全量+筛选搜索；热点榜：近 14 天主题热度统计；每日日报：每日高分精选集；会议日历：会议/讲座/政策按时间排列并标注征稿截止；期刊速递：期刊论文与书目。</p><h2>版权与合规</h2><p>本站仅展示自撰中文摘要与原文链接，不转载全文；摘要基于公开信息，注明来源。供学界个人非商业使用。若内容涉及你的机构和版权，请联系修正或删除。</p><h2>技术</h2><p>Python（标准库）+ 静态站点 + GitHub Actions 每日定时任务；可选接入 DeepSeek 大模型提升摘要质量。零服务器、零数据库成本。</p></div></div></main><footer class="site"><div class="wrap">语闻 LingBrief — 语言学资讯聚合（原型，非官方）· 内容版权归原来源所有，本站仅作摘要与链接 · 每天 08:00 自动更新 · <a href='about.html' style='color:#2f6fd0'>关于与信源列表</a></div></footer></body></html>
